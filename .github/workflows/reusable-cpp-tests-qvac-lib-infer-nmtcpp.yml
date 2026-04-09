@@ -33,7 +33,6 @@ jobs:
         with:
           repository: ${{ inputs.repository || github.event.pull_request.head.repo.full_name }}
           ref: ${{ inputs.ref || github.event.pull_request.head.ref }}
-          token: ${{ secrets.PAT_TOKEN }}
           submodules: recursive
 
       - name: Setup Node.js
@@ -61,11 +60,7 @@ jobs:
           registry=https://registry.npmjs.org/
           @qvac:registry=https://registry.npmjs.org/
           @tetherto:registry=https://npm.pkg.github.com/
-          //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
-          //npm.pkg.github.com/:_authToken=${{ secrets.PAT_TOKEN }}
           NPMRC
-          git config --global url."https://${{ secrets.PAT_TOKEN }}:@github.com/".insteadOf "https://github.com/"
-          git config --global url."https://${{ secrets.PAT_TOKEN }}:@github.com/".insteadOf "git@github.com:"
 
       - name: Install NPM dependencies
         env:

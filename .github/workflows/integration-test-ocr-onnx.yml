@@ -80,7 +80,6 @@ jobs:
         with:
           repository: ${{ inputs.repository || github.repository }}
           ref: ${{ inputs.ref || github.ref }}
-          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Configure scoped registry for @tetherto and @qvac packages
         working-directory: ${{ inputs.workdir || env.PKG_DIR }}
