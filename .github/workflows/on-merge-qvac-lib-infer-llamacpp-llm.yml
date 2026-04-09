@@ -164,15 +164,6 @@ jobs:
           node -e "const fs=require('fs');const f='packages/qvac-lib-infer-llamacpp-llm/package.json';const p=JSON.parse(fs.readFileSync(f,'utf8'));const want='@tetherto/llm-llamacpp';if(p.name!==want){p.name=want;fs.writeFileSync(f,JSON.stringify(p,null,2));console.log('Set name to',p.name);}else{console.log('Already',p.name);} "
           node -e "console.log('Effective package name (publish-gpr):', JSON.parse(require('fs').readFileSync('packages/qvac-lib-infer-llamacpp-llm/package.json','utf8')).name)"
 
-      - name: Publish to GitHub Package Registry
-        id: publish
-        uses: tetherto/qvac-devops/.github/actions/publish-library-to-gpr@v1.1.8
-        with:
-          secret-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ inputs.tag || needs.publish-logic.outputs.gpr_tag }}
-          workdir: packages/qvac-lib-infer-llamacpp-llm
-          name-suffix: "-mono"
-
   # Publish to NPM for release branches
   publish-npm:
     needs: [build, publish-logic, release-merge-guard]
@@ -213,17 +204,6 @@ jobs:
           set -euo pipefail
           node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));const want='@qvac/llm-llamacpp';if(p.name!==want){p.name=want;fs.writeFileSync('package.json',JSON.stringify(p,null,2));console.log('Set name to',p.name);}else{console.log('Already',p.name);}"
           node -e "console.log('Effective package name (publish-npm):', JSON.parse(require('fs').readFileSync('package.json','utf8')).name)"
-
-      - name: Publish to NPM Package Registry
-        id: publish
-        uses: tetherto/qvac-devops/.github/actions/publish-library-to-npm-oidc@v1.1.8
-        with:
-          secret-token: ${{ secrets.NPM_TOKEN }}
-          tag: "latest"
-          workdir: packages/qvac-lib-infer-llamacpp-llm
-          repo_name: "llamacpp-llm"
-          git-token: ${{ secrets.GITHUB_TOKEN }}
-          create-tag: "false"
 
   # Create GitHub release only for actual releases (after NPM publish)
   publish-release:
